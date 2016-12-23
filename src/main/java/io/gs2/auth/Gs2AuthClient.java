@@ -22,6 +22,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.gs2.AbstractGs2Client;
 import io.gs2.Gs2Constant;
+import io.gs2.auth.control.CreateOnceOnetimeTokenRequest;
+import io.gs2.auth.control.CreateOnceOnetimeTokenResult;
+import io.gs2.auth.control.CreateTimeOnetimeTokenRequest;
+import io.gs2.auth.control.CreateTimeOnetimeTokenResult;
 import io.gs2.auth.control.LoginRequest;
 import io.gs2.auth.control.LoginResult;
 import io.gs2.exception.BadRequestException;
@@ -95,5 +99,69 @@ public class Gs2AuthClient extends AbstractGs2Client<Gs2AuthClient> {
 				LoginRequest.Constant.FUNCTION,
 				body.toString());
 		return doRequest(post, LoginResult.class);
+	}
+	
+	/**
+	 * 時間制限付きのワンタイムトークンを発行します。
+	 * 
+	 * 時間制限付きのワンタイムトークンはGSIの代わりとなるトークンであり、署名の計算が不要となります。<br>
+	 * ゲームプログラムから直接GS2のサービスを利用するにあたって、<br>
+	 * GSIのシークレットキーをプログラムに埋め込みたくない場合に信頼できるサーバでワンタイムトークンを発行し、<br>
+	 * ワンタイムトークンを利用してGS2のサービスを利用することが出来ます。<br>
+	 * <br>
+	 * ワンタイムトークンの発行には条件があり、この関数の引数として指定する GS2-Script が返す GS2-Identifier のユーザID相当の振る舞いしか出来ません。<br>
+	 * これによって、クライアントの不正アクセスによって、より強い権限のユーザを奪取されることを防ぐことが出来ます。<br>
+	 * <br>
+	 * 逆に言えば、ワンタイムトークンで利用する GS2-Identifier のユーザの権限はゲームに必要な権限に限定するべきです。<br>
+	 * 例えば、ゲームプレイヤーにとって新しい受信ボックスの作成やスタミナプールの作成というアクションは不要なはずです。<br>
+	 * そのため、これらのアクションが実行できないようポリシーを設定したユーザ権限を応答するべきです。<br>
+	 * 
+	 * @param request リクエストパラメータ
+	 * @return ワンタイムトークン発行結果
+	 */
+	public CreateTimeOnetimeTokenResult createTimeOntimeToken(CreateTimeOnetimeTokenRequest request) {
+		ObjectNode body = JsonNodeFactory.instance.objectNode()
+				.put("scriptName", request.getScriptName());
+		HttpPost post = createHttpPost(
+				Gs2Constant.ENDPOINT_HOST + "/onetime/time/token", 
+				credential, 
+				ENDPOINT,
+				CreateTimeOnetimeTokenRequest.Constant.MODULE, 
+				CreateTimeOnetimeTokenRequest.Constant.FUNCTION,
+				body.toString());
+		return doRequest(post, CreateTimeOnetimeTokenResult.class);
+	}
+	
+	/**
+	 * 有効回数付きのワンタイムトークンを発行します。
+	 * 
+	 * 特定の用途に1回だけ利用できるワンタイムトークンを発行します。<br>
+	 * ゲーム内のアクションには、受信ボックスのメッセージ取得や現在のスタミナ値の取得など、特に制限なく呼び出されて問題のないアクションだけでなく<br>
+	 * スタミナ値の回復や、ゲーム内マネーの付与。アイテムの付与といった、繰り返し実行されたくないアクションが存在します。<br>
+	 * このワンタイムトークンはそのようなアクションをサポートするための機能で、発行後1度だけ許可されたアクションを実行できます。<br>
+	 * <br>
+	 * アクションを許可するかの判定には GS2-Script を用いて判定することができ、この関数の引数として指定したスクリプトには<br>
+	 * - 実行するアクション(Gs2Stamina:ChangeStamina)<br>
+	 * - アクションの引数({'staminaPool': 'stamina-0001', 'variation': 50, 'maxValue': 50, 'overflow': false})<br>
+	 * を引数として受け取り、バリデーションすることが出来ます。<br>
+	 * <br>
+	 * これらのアクションの実行が問題がない場合は result に true を返してください。<br>
+	 * 
+	 * @param request リクエストパラメータ
+	 * @return ワンタイムトークン発行結果
+	 */
+	public CreateOnceOnetimeTokenResult createOnceOntimeToken(CreateOnceOnetimeTokenRequest request) {
+		ObjectNode body = JsonNodeFactory.instance.objectNode()
+				.put("scriptName", request.getScriptName())
+				.put("grant", request.getGrant())
+				.put("args", request.getArgs().toString(2));
+		HttpPost post = createHttpPost(
+				Gs2Constant.ENDPOINT_HOST + "/onetime/once/token", 
+				credential, 
+				ENDPOINT,
+				CreateOnceOnetimeTokenRequest.Constant.MODULE, 
+				CreateOnceOnetimeTokenRequest.Constant.FUNCTION,
+				body.toString());
+		return doRequest(post, CreateOnceOnetimeTokenResult.class);
 	}
 }
