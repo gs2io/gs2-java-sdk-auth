@@ -28,6 +28,8 @@ import io.gs2.auth.control.CreateTimeOnetimeTokenRequest;
 import io.gs2.auth.control.CreateTimeOnetimeTokenResult;
 import io.gs2.auth.control.LoginRequest;
 import io.gs2.auth.control.LoginResult;
+import io.gs2.auth.control.LoginWithSignRequest;
+import io.gs2.auth.control.LoginWithSignResult;
 import io.gs2.exception.BadRequestException;
 import io.gs2.exception.InternalServerErrorException;
 import io.gs2.exception.UnauthorizedException;
@@ -99,6 +101,41 @@ public class Gs2AuthClient extends AbstractGs2Client<Gs2AuthClient> {
 				LoginRequest.Constant.FUNCTION,
 				body.toString());
 		return doRequest(post, LoginResult.class);
+	}
+
+	/**
+	 * GS2-Account 認証署名検証付きログイン。
+	 * 
+	 * Login の機能に更に GS2-Account による認証署名検証機能を追加したAPIです。<br>
+	 * 通常の Login はクライアントから直接利用するには脆弱で、任意のユーザIDでログインできてしまいます。<br>
+	 * <br>
+	 * それに対して、こちらのAPIは GS2-Account の認証情報による署名検証が実装されており、<br>
+	 * 他人になりすましてログインすることができなくなっています。<br>
+	 * <br>
+	 * 独自のアカウントシステムを利用してサーバ経由でGS2にログインする場合は通常のLoginを<br>
+	 * GS2-Accountを利用してクライアントから直接GS2にログインする場合は本APIを利用することでセキュアにGS2を利用することが出来ます。<br>
+	 * 
+	 * @param request リクエストパラメータ
+	 * @return ログイン結果
+	 * 
+	 * @throws BadRequestException リクエストパラーメータに誤りがある場合にスローされます
+	 * @throws UnauthorizedException 認証に失敗した場合にスローされます
+	 * @throws InternalServerErrorException 未知のサーバエラーが発生した場合にスローされます
+	 */
+	public LoginWithSignResult loginWithSign(LoginWithSignRequest request) throws BadRequestException, UnauthorizedException, InternalServerErrorException {
+		ObjectNode body = JsonNodeFactory.instance.objectNode()
+				.put("serviceId", request.getServiceId())
+				.put("userId", request.getUserId())
+				.put("keyName", request.getKeyName())
+				.put("sign", request.getSign());
+		HttpPost post = createHttpPost(
+				Gs2Constant.ENDPOINT_HOST + "/login/signed", 
+				credential, 
+				ENDPOINT,
+				LoginWithSignRequest.Constant.MODULE, 
+				LoginWithSignRequest.Constant.FUNCTION,
+				body.toString());
+		return doRequest(post, LoginWithSignResult.class);
 	}
 	
 	/**
