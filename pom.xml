@@ -56,9 +56,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<configuration>
-						<argLine>${jacocoArgs}</argLine>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -175,7 +172,28 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Maven Repository Switchboard</name>
+			<layout>default</layout>
+			<url>http://repo1.maven.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>sonatype</id>
+			<name>sonatype</name>
+			<layout>default</layout>
+			<url>https://oss.sonatype.org/service/local/repositories/releases/content/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<distributionManagement>
 		<repository>
 			<id>ossrh</id>
