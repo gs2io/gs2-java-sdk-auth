@@ -16,14 +16,6 @@ jobs:
             - PUBLISH
       -
         run:
-          name: OSの初期設定
-          command: |
-            sudo apt-get update && sudo apt-get install gnupg2 python2.7
-            sudo -O curl -kL https://bootstrap.pypa.io/get-pip.py
-            python get-pip.py --user
-            pip install awscli --user
-      -
-        run:
           name: Publishスクリプトを取得
           command: |
             aws s3 cp s3://gs2-repos/python/publish/${PUBLISH_VERSION}/publish-${PUBLISH_VERSION}.tar.gz ~/ && tar -zxvf ~/publish-${PUBLISH_VERSION}.tar.gz -C ~/
