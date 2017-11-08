@@ -6,44 +6,47 @@
  * You may not use this file except in compliance with the License.
  * A copy of the License is located at
  *
- *  http://aws.amazon.com/apache2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * or in the "license" file accompanying this file. This file is distributed
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 package io.gs2.auth.control;
 
+import org.json.JSONObject;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+
 /**
- * 1回のみ有効ワンタイムトークン発行結果。
- * 
  * @author Game Server Services, Inc.
- *
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CreateOnceOnetimeTokenResult {
 
-	/** ワンタイムトークン */
-	String token;
+	/** アクセストークン */
+	private String token;
+
 
 	/**
-	 * ワンタイムトークンを取得
-	 * 
-	 * @return ワンタイムトークン
+	 * アクセストークンを取得
+	 *
+	 * @return アクセストークン
 	 */
 	public String getToken() {
 		return token;
 	}
-	
+
 	/**
-	 * ワンタイムトークンを設定
-	 * 
-	 * @param token ワンタイムトークン
+	 * アクセストークンを設定
+	 *
+	 * @param token アクセストークン
 	 */
 	public void setToken(String token) {
 		this.token = token;
 	}
+
 }
