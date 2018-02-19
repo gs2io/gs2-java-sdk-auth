@@ -57,13 +57,84 @@ public class Gs2AuthClient extends AbstractGs2Client<Gs2AuthClient> {
 
 
 	/**
+	 * 実行回数制限付きワンタイムトークンを発行します<br>
+	 * <br>
+	 *
+	 * @param request リクエストパラメータ
+
+	 * @return 結果
+
+	 */
+
+	public CreateOnceOnetimeTokenResult createOnceOnetimeToken(CreateOnceOnetimeTokenRequest request) {
+
+		ObjectNode body = JsonNodeFactory.instance.objectNode()
+				.put("scriptName", request.getScriptName());
+
+        if(request.getGrant() != null) body.put("grant", request.getGrant());
+        if(request.getArgs() != null) body.put("args", request.getArgs().toString());
+		HttpPost post = createHttpPost(
+				Gs2Constant.ENDPOINT_HOST + "/onetime/once/token",
+				credential,
+				ENDPOINT,
+				CreateOnceOnetimeTokenRequest.Constant.MODULE,
+				CreateOnceOnetimeTokenRequest.Constant.FUNCTION,
+				body.toString());
+        if(request.getRequestId() != null) {
+            post.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
+
+
+		return doRequest(post, CreateOnceOnetimeTokenResult.class);
+
+	}
+
+
+	/**
+	 * 1回のみ実行を許可するワンタイムトークンを発行します<br>
+	 * このトークンはスタミナの回復処理など、有効期間内だからといって何度も実行されたくない処理を1度だけ許可したい場合に発行します。<br>
+	 * <br>
+	 *
+	 * @param request リクエストパラメータ
+
+	 * @return 結果
+
+	 */
+
+	public CreateTimeOnetimeTokenResult createTimeOnetimeToken(CreateTimeOnetimeTokenRequest request) {
+
+		ObjectNode body = JsonNodeFactory.instance.objectNode()
+				.put("scriptName", request.getScriptName());
+
+		HttpPost post = createHttpPost(
+				Gs2Constant.ENDPOINT_HOST + "/onetime/time/token",
+				credential,
+				ENDPOINT,
+				CreateTimeOnetimeTokenRequest.Constant.MODULE,
+				CreateTimeOnetimeTokenRequest.Constant.FUNCTION,
+				body.toString());
+        if(request.getRequestId() != null) {
+            post.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
+
+
+		return doRequest(post, CreateTimeOnetimeTokenResult.class);
+
+	}
+
+
+	/**
 	 * ログイン処理を実行します<br>
 	 * <br>
 	 *
 	 * @param request リクエストパラメータ
+
 	 * @return 結果
+
 	 */
+
 	public LoginResult login(LoginRequest request) {
+
 		ObjectNode body = JsonNodeFactory.instance.objectNode()
 				.put("serviceId", request.getServiceId())
 				.put("userId", request.getUserId());
@@ -75,33 +146,13 @@ public class Gs2AuthClient extends AbstractGs2Client<Gs2AuthClient> {
 				LoginRequest.Constant.MODULE,
 				LoginRequest.Constant.FUNCTION,
 				body.toString());
+        if(request.getRequestId() != null) {
+            post.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
+
 
 		return doRequest(post, LoginResult.class);
-	}
 
-
-	/**
-	 * 実行回数制限付きワンタイムトークンを発行します<br>
-	 * <br>
-	 *
-	 * @param request リクエストパラメータ
-	 * @return 結果
-	 */
-	public CreateOnceOnetimeTokenResult createOnceOnetimeToken(CreateOnceOnetimeTokenRequest request) {
-		ObjectNode body = JsonNodeFactory.instance.objectNode()
-				.put("scriptName", request.getScriptName());
-
-        if(request.getArgs() != null) body.put("args", request.getArgs().toString(2));
-        if(request.getGrant() != null) body.put("grant", request.getGrant());
-		HttpPost post = createHttpPost(
-				Gs2Constant.ENDPOINT_HOST + "/onetime/once/token",
-				credential,
-				ENDPOINT,
-				CreateOnceOnetimeTokenRequest.Constant.MODULE,
-				CreateOnceOnetimeTokenRequest.Constant.FUNCTION,
-				body.toString());
-
-		return doRequest(post, CreateOnceOnetimeTokenResult.class);
 	}
 
 
@@ -110,9 +161,13 @@ public class Gs2AuthClient extends AbstractGs2Client<Gs2AuthClient> {
 	 * <br>
 	 *
 	 * @param request リクエストパラメータ
+
 	 * @return 結果
+
 	 */
+
 	public LoginWithSignResult loginWithSign(LoginWithSignRequest request) {
+
 		ObjectNode body = JsonNodeFactory.instance.objectNode()
 				.put("serviceId", request.getServiceId())
 				.put("userId", request.getUserId())
@@ -126,32 +181,13 @@ public class Gs2AuthClient extends AbstractGs2Client<Gs2AuthClient> {
 				LoginWithSignRequest.Constant.MODULE,
 				LoginWithSignRequest.Constant.FUNCTION,
 				body.toString());
+        if(request.getRequestId() != null) {
+            post.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
+
 
 		return doRequest(post, LoginWithSignResult.class);
-	}
 
-
-	/**
-	 * 1回のみ実行を許可するワンタイムトークンを発行します<br>
-	 * このトークンはスタミナの回復処理など、有効期間内だからといって何度も実行されたくない処理を1度だけ許可したい場合に発行します。<br>
-	 * <br>
-	 *
-	 * @param request リクエストパラメータ
-	 * @return 結果
-	 */
-	public CreateTimeOnetimeTokenResult createTimeOnetimeToken(CreateTimeOnetimeTokenRequest request) {
-		ObjectNode body = JsonNodeFactory.instance.objectNode()
-				.put("scriptName", request.getScriptName());
-
-		HttpPost post = createHttpPost(
-				Gs2Constant.ENDPOINT_HOST + "/onetime/time/token",
-				credential,
-				ENDPOINT,
-				CreateTimeOnetimeTokenRequest.Constant.MODULE,
-				CreateTimeOnetimeTokenRequest.Constant.FUNCTION,
-				body.toString());
-
-		return doRequest(post, CreateTimeOnetimeTokenResult.class);
 	}
 
 
