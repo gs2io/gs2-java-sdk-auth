@@ -19,7 +19,7 @@ package io.gs2.auth.control;
 import org.json.JSONObject;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import io.gs2.auth.model.*;
 
 /**
  * @author Game Server Services, Inc.

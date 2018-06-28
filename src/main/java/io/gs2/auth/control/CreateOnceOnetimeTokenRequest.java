@@ -34,11 +34,11 @@ public class CreateOnceOnetimeTokenRequest extends Gs2BasicRequest<CreateOnceOne
 	/** 認可処理に実行するスクリプト */
 	private String scriptName;
 
-	/** grant で指定したアクションに引数として渡すことを許可する内容 */
-	private JSONObject args;
-
 	/** 認可するアクション */
 	private String grant;
+
+	/** grant で指定したアクションに引数として渡すことを許可する内容 */
+	private String args;
 
 
 	/**
@@ -71,35 +71,6 @@ public class CreateOnceOnetimeTokenRequest extends Gs2BasicRequest<CreateOnceOne
 	}
 
 	/**
-	 * grant で指定したアクションに引数として渡すことを許可する内容を取得
-	 *
-	 * @return grant で指定したアクションに引数として渡すことを許可する内容
-	 */
-	public JSONObject getArgs() {
-		return args;
-	}
-
-	/**
-	 * grant で指定したアクションに引数として渡すことを許可する内容を設定
-	 *
-	 * @param args grant で指定したアクションに引数として渡すことを許可する内容
-	 */
-	public void setArgs(JSONObject args) {
-		this.args = args;
-	}
-
-	/**
-	 * grant で指定したアクションに引数として渡すことを許可する内容を設定
-	 *
-	 * @param args grant で指定したアクションに引数として渡すことを許可する内容
-	 * @return this
-	 */
-	public CreateOnceOnetimeTokenRequest withArgs(JSONObject args) {
-		setArgs(args);
-		return this;
-	}
-
-	/**
 	 * 認可するアクションを取得
 	 *
 	 * @return 認可するアクション
@@ -125,6 +96,35 @@ public class CreateOnceOnetimeTokenRequest extends Gs2BasicRequest<CreateOnceOne
 	 */
 	public CreateOnceOnetimeTokenRequest withGrant(String grant) {
 		setGrant(grant);
+		return this;
+	}
+
+	/**
+	 * grant で指定したアクションに引数として渡すことを許可する内容を取得
+	 *
+	 * @return grant で指定したアクションに引数として渡すことを許可する内容
+	 */
+	public String getArgs() {
+		return args;
+	}
+
+	/**
+	 * grant で指定したアクションに引数として渡すことを許可する内容を設定
+	 *
+	 * @param args grant で指定したアクションに引数として渡すことを許可する内容
+	 */
+	public void setArgs(String args) {
+		this.args = args;
+	}
+
+	/**
+	 * grant で指定したアクションに引数として渡すことを許可する内容を設定
+	 *
+	 * @param args grant で指定したアクションに引数として渡すことを許可する内容
+	 * @return this
+	 */
+	public CreateOnceOnetimeTokenRequest withArgs(String args) {
+		setArgs(args);
 		return this;
 	}
 
